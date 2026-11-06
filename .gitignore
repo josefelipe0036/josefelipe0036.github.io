@@ -1,0 +1,5 @@
+*.pdf
+!assets/*.pdf
+*Zone.Identifier
+linkedin_*
+linkedin_posts/

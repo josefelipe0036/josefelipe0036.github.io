@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>José Felipe Azevedo · Estatística, Dados e IA</title>
+  <meta name="description" content="Portfólio de José Felipe Custódia de Azevedo: Estatística (UnB), Ciência de Dados, Machine Learning e Inteligência Artificial. P&D em telecomunicações e 6G, publicação no Y20 (G20) e ensino de Estatística." />
+  <meta name="author" content="José Felipe Custódia de Azevedo" />
+  <meta name="theme-color" content="#0D0C0A" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="José Felipe Azevedo · Estatística, Dados e IA" />
+  <meta property="og:description" content="Estatística (UnB), Ciência de Dados, Machine Learning e IA. Dados são histórias que ainda não foram bem contadas." />
+  <meta property="og:locale" content="pt_BR" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230D0C0A'/%3E%3Ccircle cx='9' cy='16' r='6' fill='%238E5527'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23C98A55'/%3E%3Ccircle cx='23' cy='16' r='6' fill='%23DDB867'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // fundo e superfícies
+            ink:   '#0D0C0A',
+            soot:  '#15120E',
+            umber: '#2A2119',
+            line:  '#3B3329',
+            // paleta "poder" (marrons → dourado)
+            cacao: '#5A3519',
+            rust:  '#8E5527',
+            copper:'#C98A55',
+            gold:  '#DDB867',
+            cream: '#EEE0B4',
+            // paleta "solenidade" / "nobreza"
+            bone:  '#D9CFB4',
+            sage:  '#A8A68C',
+            olive: '#B8AE6A',
+            brass: '#C49A47',
+            ash:   '#858273',
+            // paleta "honra"
+            navy:  '#1B2336',
+            steel: '#3B4659',
+          },
+          fontFamily: {
+            sans: ['Archivo', 'system-ui', 'sans-serif'],
+            type: ['"Courier Prime"', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    body { background: #0D0C0A; color: #EEE0B4; }
+    .cond { font-stretch: 64%; }
+    .outline-text { color: transparent; -webkit-text-stroke: 2px #C49A47; }
+    @media (min-width: 768px) { .outline-text { -webkit-text-stroke-width: 3px; } }
+
+    /* granulado de filme, como nas referências */
+    body::after {
+      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 70; opacity: .09; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(238,224,180,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(238,224,180,.05) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    /* paleta em círculos (assinatura visual) */
+    .dots { display: flex; }
+    .dots i { display: block; width: var(--d, 28px); height: var(--d, 28px); border-radius: 9999px; margin-left: calc(var(--d, 28px) * -.28); }
+    .dots i:first-child { margin-left: 0; }
+
+    /* caixas brutas */
+    .slab  { border: 3px solid #EEE0B4; }
+    .shadow-brass { box-shadow: 10px 10px 0 #C49A47; }
+    .shadow-cream { box-shadow: 10px 10px 0 #EEE0B4; }
+    .shadow-ink   { box-shadow: 8px 8px 0 #0D0C0A; }
+    .press { transition: transform .15s ease, box-shadow .15s ease; }
+    .press:hover  { transform: translate(-4px, -4px); }
+    .press.shadow-brass:hover { box-shadow: 14px 14px 0 #C49A47; }
+    .press.shadow-ink:hover   { box-shadow: 12px 12px 0 #0D0C0A; }
+    .press:active { transform: translate(4px, 4px); box-shadow: 0 0 0 transparent !important; }
+
+    .icon svg { width: 100%; height: 100%; }
+    :focus-visible { outline: 3px solid #DDB867; outline-offset: 3px; }
+
+    /* faixa corrida */
+    .marquee { display: flex; width: max-content; animation: run 38s linear infinite; }
+    @keyframes run { to { transform: translateX(-50%); } }
+
+    /* reveal ao rolar (só com JS) */
+    .js .reveal { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s ease; }
+    .js .reveal.in { opacity: 1; transform: none; }
+
+    /* gráfico do hero */
+    #story .pt { opacity: 0; transition: opacity .35s ease; }
+    #story.on .pt { opacity: 1; }
+    #story .fit { stroke-dasharray: 1000; stroke-dashoffset: 1000; transition: stroke-dashoffset 1.6s ease .9s; }
+    #story.on .fit { stroke-dashoffset: 0; }
+    #story .band { opacity: 0; transition: opacity .8s ease 1.8s; }
+    #story.on .band { opacity: 1; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .marquee { animation: none; }
+      .js .reveal, #story .pt, #story .fit, #story .band { transition: none; opacity: 1; transform: none; stroke-dashoffset: 0; }
+      .press, .press:hover { transition: none; transform: none; }
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased selection:bg-gold selection:text-ink">
+  <a href="#conteudo" class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[80] focus:bg-gold focus:px-4 focus:py-2 font-type text-ink">Pular para o conteúdo</a>
+
+  <!-- ================= NAV ================= -->
+  <header class="fixed inset-x-0 top-0 z-40 border-b-[3px] border-cream bg-ink">
+    <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6" aria-label="Principal">
+      <a href="#inicio" class="flex items-center gap-3">
+        <span class="dots" style="--d:16px" aria-hidden="true"><i class="bg-rust"></i><i class="bg-copper"></i><i class="bg-gold"></i></span>
+        <span class="cond text-xl font-black uppercase tracking-tight">José Azevedo</span>
+      </a>
+      <ul class="hidden items-center font-type text-sm uppercase md:flex">
+        <li><a class="block px-3 py-1 hover:bg-cream hover:text-ink" href="#sobre">Sobre</a></li>
+        <li><a class="block px-3 py-1 hover:bg-cream hover:text-ink" href="#projetos">Projetos</a></li>
+        <li><a class="block px-3 py-1 hover:bg-cream hover:text-ink" href="#trajetoria">Trajetória</a></li>
+        <li><a class="block px-3 py-1 hover:bg-cream hover:text-ink" href="#stack">Stack</a></li>
+        <li><a class="block px-3 py-1 hover:bg-cream hover:text-ink" href="#contato">Contato</a></li>
+      </ul>
+      <div class="flex items-center gap-2">
+        <a href="assets/curriculo-jose-felipe-azevedo.pdf" download class="hidden items-center gap-2 border-[3px] border-cream bg-gold px-3 py-1 font-type text-sm font-bold uppercase text-ink hover:bg-cream sm:inline-flex">
+          <span class="icon h-4 w-4" data-icon="download"></span>Currículo
+        </a>
+        <button id="menuBtn" class="inline-flex h-10 w-10 items-center justify-center border-[3px] border-cream md:hidden" aria-expanded="false" aria-controls="menuMobile" aria-label="Abrir menu">
+          <span class="icon h-5 w-5" data-icon="menu"></span>
+        </button>
+      </div>
+    </nav>
+    <div id="menuMobile" class="hidden border-t-[3px] border-cream bg-ink md:hidden">
+      <ul class="font-type text-base uppercase">
+        <li><a class="block border-b border-line px-4 py-3" href="#sobre">01 — Sobre</a></li>
+        <li><a class="block border-b border-line px-4 py-3" href="#projetos">02 — Projetos</a></li>
+        <li><a class="block border-b border-line px-4 py-3" href="#trajetoria">03 — Trajetória</a></li>
+        <li><a class="block border-b border-line px-4 py-3" href="#stack">04 — Stack</a></li>
+        <li><a class="block border-b border-line px-4 py-3" href="#contato">05 — Contato</a></li>
+        <li><a class="block bg-gold px-4 py-3 font-bold text-ink" href="assets/curriculo-jose-felipe-azevedo.pdf" download>↓ Baixar currículo (PDF)</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <!-- ================= HERO ================= -->
+    <section id="inicio" class="grid-bg relative overflow-hidden pt-16">
+      <div class="mx-auto grid max-w-6xl items-center gap-14 px-4 pb-16 pt-14 sm:px-6 md:pb-24 md:pt-20 lg:grid-cols-[1.1fr_.9fr]">
+        <div>
+          <div class="mb-8 flex items-center gap-4">
+            <span class="dots" style="--d:30px" aria-hidden="true"><i class="bg-cacao"></i><i class="bg-rust"></i><i class="bg-copper"></i><i class="bg-gold"></i><i class="bg-cream"></i></span>
+            <span class="font-type text-sm text-sage">estatística · unb · brasília/df</span>
+          </div>
+          <h1 class="cond text-[clamp(3.4rem,11vw,7.5rem)] font-black uppercase leading-[.84] tracking-tight">
+            José Felipe<br />
+            <span class="outline-text">Custódia de</span><br />
+            Azevedo
+          </h1>
+          <p class="mt-8 max-w-xl font-type text-lg leading-relaxed text-bone sm:text-xl">
+            Estatístico em formação pela <b class="text-cream">UnB</b>. Trabalho com
+            <span class="bg-gold px-1 text-ink">Ciência de Dados</span>, Machine Learning e Inteligência Artificial, com P&amp;D aplicado a telecomunicações e 6G.
+          </p>
+          <div class="mt-10 flex flex-col gap-5 sm:flex-row sm:items-center">
+            <a href="https://wa.me/5561986539720?text=Ol%C3%A1%2C%20Jos%C3%A9!%20Vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar." target="_blank" rel="noopener"
+               class="press shadow-brass inline-flex items-center justify-center gap-3 border-[3px] border-cream bg-cream px-7 py-4 font-type text-base font-bold uppercase text-ink">
+              <span class="icon h-5 w-5" data-icon="whatsapp"></span>
+              Falar no WhatsApp
+            </a>
+            <a href="#projetos" class="inline-flex items-center justify-center gap-2 border-[3px] border-line px-7 py-4 font-type text-base uppercase text-cream hover:border-cream">
+              Ver projetos ↓
+            </a>
+          </div>
+        </div>
+
+        <!-- regressão desenhada sobre os dados -->
+        <figure class="reveal slab shadow-brass bg-soot">
+          <div class="flex items-center justify-between border-b-[3px] border-cream bg-cream px-4 py-2 font-type text-sm font-bold uppercase text-ink">
+            <span>fig. 01 — dados → história</span>
+            <span class="dots" style="--d:12px" aria-hidden="true"><i class="bg-rust"></i><i class="bg-copper"></i><i class="bg-gold"></i></span>
+          </div>
+          <svg id="story" viewBox="0 0 400 300" class="block w-full" role="img" aria-label="Gráfico de dispersão com uma reta de regressão ajustada e sua faixa de confiança">
+            <g id="axes" stroke="#2A2119" stroke-width="1"></g>
+            <path class="band" id="band" fill="#C98A55" fill-opacity=".18" />
+            <g id="pts"></g>
+            <line class="fit" id="fit" stroke="#DDB867" stroke-width="3.5" stroke-linecap="square" />
+          </svg>
+          <figcaption class="border-t-[3px] border-cream px-4 py-3 font-type text-sm text-sage">
+            <span class="text-cream">ŷ = β̂₀ + β̂₁x</span> · n = <span id="nPts">48</span> · R² = <span id="r2" class="font-bold text-gold">—</span>
+          </figcaption>
+        </figure>
+      </div>
+
+      <!-- faixa corrida -->
+      <div class="overflow-hidden border-y-[3px] border-cream bg-gold py-3 text-ink" aria-hidden="true">
+        <div class="marquee font-type text-lg font-bold uppercase">
+          <span class="flex shrink-0 items-center gap-8 pr-8" id="marqueeTrack"></span>
+          <span class="flex shrink-0 items-center gap-8 pr-8" id="marqueeTrack2"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SOBRE ================= -->
+    <section id="sobre" class="bg-soot">
+      <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
+        <div class="reveal mb-10 flex items-center gap-4">
+          <span class="dots" style="--d:22px" aria-hidden="true"><i class="bg-ink ring-1 ring-line"></i><i class="bg-[#5E5E5C]"></i><i class="bg-sage"></i><i class="bg-bone"></i><i class="bg-olive"></i></span>
+          <p class="font-type text-sm uppercase text-sage">01 / sobre mim</p>
+        </div>
+
+        <div class="grid gap-12 lg:grid-cols-[1.05fr_.95fr]">
+          <blockquote class="reveal">
+            <p class="cond text-[clamp(2.8rem,7.5vw,5.6rem)] font-black uppercase leading-[.86]">
+              Estatística é <span class="text-gold">contar histórias</span> através de dados.
+            </p>
+            <footer class="mt-6 font-type text-sage">— o que me move desde o primeiro semestre</footer>
+          </blockquote>
+          <div class="reveal space-y-5 font-type text-lg leading-relaxed text-bone">
+            <p>Dados não são apenas números. São histórias de pessoas, de fenômenos da natureza e de decisões que ainda não foram contadas da maneira correta. Meu trabalho é contá-las com <b class="text-cream">rigor estatístico</b> e transformá-las em modelos que funcionam.</p>
+            <p>Na UnB construí essa base em <b class="text-cream">modelagem estatística</b> (inferência, regressão e GLM, amostragem, clusterização), <b class="text-cream">redes neurais</b> com PyTorch, TensorFlow/Keras e H2O, visão computacional e <b class="text-cream">dados massivos</b> com Apache Spark.</p>
+            <p>Quatro anos ensinando Estatística em escolas públicas do Paranoá (DF) e em monitorias me deram o que mais uso hoje: explicar um modelo para qualquer público.</p>
+          </div>
+        </div>
+
+        <dl class="reveal slab mt-16 grid grid-cols-2 md:grid-cols-4">
+          <div class="border-b-[3px] border-r-[3px] border-cream p-5 md:border-b-0">
+            <dt class="font-type text-sm uppercase text-sage">Publicações</dt>
+            <dd class="cond mt-1 text-6xl font-black">03</dd>
+          </div>
+          <div class="border-b-[3px] border-cream p-5 md:border-b-0 md:border-r-[3px]">
+            <dt class="font-type text-sm uppercase text-sage">Projetos de P&amp;D</dt>
+            <dd class="cond mt-1 text-6xl font-black">02</dd>
+          </div>
+          <div class="border-r-[3px] border-cream bg-copper p-5 text-ink">
+            <dt class="font-type text-sm uppercase">Anos de extensão</dt>
+            <dd class="cond mt-1 text-6xl font-black">04</dd>
+          </div>
+          <div class="bg-gold p-5 text-ink">
+            <dt class="font-type text-sm uppercase">Foco</dt>
+            <dd class="cond mt-1 text-4xl font-black uppercase leading-[.9]">Dados<br />&amp; IA</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ================= PROJETOS ================= -->
+    <section id="projetos" class="grid-bg border-y-[3px] border-cream">
+      <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
+        <div class="reveal mb-4 flex items-center gap-4">
+          <span class="dots" style="--d:22px" aria-hidden="true"><i class="bg-cacao"></i><i class="bg-rust"></i><i class="bg-copper"></i><i class="bg-gold"></i><i class="bg-cream"></i></span>
+          <p class="font-type text-sm uppercase text-sage">02 / projetos e pesquisas</p>
+        </div>
+        <h2 class="reveal cond mb-14 text-[clamp(3rem,9vw,6rem)] font-black uppercase leading-[.85]">Em <span class="outline-text">destaque</span></h2>
+
+        <div class="grid gap-10 md:grid-cols-2 [&>*]:min-w-0">
+          <!-- P&D Telecom -->
+          <article class="reveal press shadow-brass slab flex flex-col bg-soot">
+            <header class="flex items-center justify-between border-b-[3px] border-cream px-5 py-2.5 font-type text-sm uppercase">
+              <span class="font-bold text-gold">P&amp;D · Telecom</span><span class="text-sage">2024 — atual</span>
+            </header>
+            <div class="flex flex-1 flex-col p-6">
+              <div class="flex items-start justify-between gap-4">
+                <h3 class="cond min-w-0 break-words text-[1.9rem] sm:text-4xl font-black uppercase leading-[.9]">Radiocomunicação, redes e 6G</h3>
+                <span class="cond outline-text hidden text-6xl font-black leading-none sm:block">01</span>
+              </div>
+              <p class="mt-2 font-type text-sm text-sage">UnB / FUNAPE</p>
+              <ul class="mt-5 space-y-3 font-type text-bone">
+                <li class="flex gap-3"><span class="mt-[.55em] h-2 w-2 shrink-0 bg-gold"></span><span>Pesquisa e inovação em radiocomunicação e redes de telecomunicações, com implantação de um ambiente laboratorial de estudos e experimentação.</span></li>
+                <li class="flex gap-3"><span class="mt-[.55em] h-2 w-2 shrink-0 bg-gold"></span><span>Pesquisa sobre os desafios regulatórios do ecossistema digital e do 6G: espectro, interoperabilidade, privacidade e governança de dados.</span></li>
+              </ul>
+              <ul class="mt-auto flex flex-wrap gap-2 pt-6 font-type text-xs uppercase">
+                <li class="border-2 border-sage px-2 py-0.5 text-sage">Python</li><li class="border-2 border-sage px-2 py-0.5 text-sage">Machine Learning</li><li class="border-2 border-sage px-2 py-0.5 text-sage">Telecom</li><li class="border-2 border-sage px-2 py-0.5 text-sage">Governança de dados</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- BRB -->
+          <article class="reveal press shadow-brass slab flex flex-col bg-soot">
+            <header class="flex items-center justify-between border-b-[3px] border-cream px-5 py-2.5 font-type text-sm uppercase">
+              <span class="font-bold text-gold">Mercado financeiro</span><span class="text-sage">2024</span>
+            </header>
+            <div class="flex flex-1 flex-col p-6">
+              <div class="flex items-start justify-between gap-4">
+                <h3 class="cond min-w-0 break-words text-[1.9rem] sm:text-4xl font-black uppercase leading-[.9]">Modelagem e dados no BRB</h3>
+                <span class="cond outline-text hidden text-6xl font-black leading-none sm:block">02</span>
+              </div>
+              <p class="mt-2 font-type text-sm text-sage">Banco Regional de Brasília</p>
+              <ul class="mt-5 space-y-3 font-type text-bone">
+                <li class="flex gap-3"><span class="mt-[.55em] h-2 w-2 shrink-0 bg-gold"></span><span>Análise de dados financeiros para apoio à tomada de decisão no setor bancário.</span></li>
+                <li class="flex gap-3"><span class="mt-[.55em] h-2 w-2 shrink-0 bg-gold"></span><span>Tratamento e organização de bases de dados para relatórios gerenciais, somado à formação em finanças computacionais e ML aplicado a finanças.</span></li>
+              </ul>
+              <ul class="mt-auto flex flex-wrap gap-2 pt-6 font-type text-xs uppercase">
+                <li class="border-2 border-sage px-2 py-0.5 text-sage">Dados financeiros</li><li class="border-2 border-sage px-2 py-0.5 text-sage">Modelagem</li><li class="border-2 border-sage px-2 py-0.5 text-sage">Setor bancário</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- Y20 -->
+          <article class="reveal press shadow-cream flex flex-col border-[3px] border-cream bg-gold text-ink">
+            <header class="flex items-center justify-between border-b-[3px] border-ink px-5 py-2.5 font-type text-sm font-bold uppercase">
+              <span>Publicação · Y20 / G20</span><span>2025</span>
+            </header>
+            <div class="flex flex-1 flex-col p-6">
+              <div class="flex items-start justify-between gap-4">
+                <h3 class="cond min-w-0 break-words text-[1.9rem] sm:text-4xl font-black uppercase leading-[.9]">IA na governança dos atos normativos</h3>
+                <span class="cond hidden text-6xl font-black leading-none text-cacao/40 sm:block">03</span>
+              </div>
+              <p class="mt-2 font-type text-sm text-cacao">Caderno de Produções do Y20 — juventude do G20</p>
+              <p class="mt-5 font-type">Uma IA para ler 28 anos de projetos de lei da Câmara e ajudar jovens a encontrar o que os afeta:</p>
+              <ol class="mt-4 space-y-1.5 font-type text-[15px]">
+                <li><b>01</b> Coleta via API de Dados Abertos (1996–2024)</li>
+                <li><b>02</b> Filtro de PL, PEC e PLP sobre juventude</li>
+                <li><b>03</b> Resumos com <span class="break-all bg-ink px-1 text-gold">facebook/bart-large-cnn</span></li>
+                <li><b>04</b> Interface em R Shiny e avaliação crítica do modelo</li>
+              </ol>
+              <a href="https://www.gov.br/secretariageral/pt-br/juventude/publicacoes/caderno-do-concurso-de-producoes-do-grupo-de-engajamento-do-g20-2013-youth-20-y20/caderno-de-artigos" target="_blank" rel="noopener"
+                 class="mt-auto inline-flex w-fit items-center gap-2 border-[3px] border-ink bg-ink px-4 py-2 font-type text-sm font-bold uppercase text-gold hover:bg-cream hover:text-ink" style="margin-top:auto">
+                Ler o artigo (gov.br) <span class="icon h-4 w-4" data-icon="arrow"></span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Extensão -->
+          <article class="reveal press shadow-brass slab flex flex-col bg-soot">
+            <header class="flex items-center justify-between border-b-[3px] border-cream px-5 py-2.5 font-type text-sm uppercase">
+              <span class="font-bold text-gold">Extensão &amp; ensino</span><span class="text-sage">2021 — 2024</span>
+            </header>
+            <div class="flex flex-1 flex-col p-6">
+              <div class="flex items-start justify-between gap-4">
+                <h3 class="cond min-w-0 break-words text-[1.9rem] sm:text-4xl font-black uppercase leading-[.9]">Educação estatística na UnB</h3>
+                <span class="cond outline-text hidden text-6xl font-black leading-none sm:block">04</span>
+              </div>
+              <p class="mt-2 font-type text-sm text-sage">PIBEX · SODEBRAS · Monitoria</p>
+              <ul class="mt-5 space-y-3 font-type text-bone">
+                <li class="flex gap-3"><span class="mt-[.55em] h-2 w-2 shrink-0 bg-gold"></span><span>PIBEX “Promovendo Estatística no Paranoá” e “Promovendo Educação Estatística”: probabilidade e estatística em escolas públicas.</span></li>
+                <li class="flex gap-3"><span class="mt-[.55em] h-2 w-2 shrink-0 bg-gold"></span><span>Coautor de 2 artigos na revista <b class="text-cream">SODEBRAS</b> (v. 17, 2022; v. 18, 2023) sobre ensino de Estatística via extensão.</span></li>
+                <li class="flex gap-3"><span class="mt-[.55em] h-2 w-2 shrink-0 bg-gold"></span><span>Monitoria em Estatística Exploratória, Probabilidade, Bioestatística e Estatística Aplicada.</span></li>
+              </ul>
+              <ul class="mt-auto flex flex-wrap gap-2 pt-6 font-type text-xs uppercase">
+                <li class="border-2 border-sage px-2 py-0.5 text-sage">Didática</li><li class="border-2 border-sage px-2 py-0.5 text-sage">Comunicação de dados</li><li class="border-2 border-sage px-2 py-0.5 text-sage">Probabilidade</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TRAJETÓRIA ================= -->
+    <section id="trajetoria" class="bg-navy">
+      <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
+        <div class="reveal mb-4 flex items-center gap-4">
+          <span class="dots" style="--d:22px" aria-hidden="true"><i class="bg-ink"></i><i class="bg-[#24262B]"></i><i class="bg-[#2A3655]"></i><i class="bg-steel"></i><i class="bg-[#5A5F73]"></i></span>
+          <p class="font-type text-sm uppercase text-[#9AA3B8]">03 / trajetória</p>
+        </div>
+        <h2 class="reveal cond mb-14 text-[clamp(3rem,9vw,6rem)] font-black uppercase leading-[.85]">Linha do tempo</h2>
+
+        <ol class="reveal grid gap-0 border-[3px] border-cream md:grid-cols-5">
+          <li class="border-b-[3px] border-cream bg-cream p-5 text-ink md:border-b-0 md:border-r-[3px]">
+            <p class="font-type text-sm font-bold uppercase">2025 → hoje</p>
+            <p class="cond mt-3 text-2xl font-black uppercase leading-[.95]">P&amp;D em radiocomunicação</p>
+            <p class="mt-2 font-type text-sm">UnB / FUNAPE · laboratório de experimentação</p>
+          </li>
+          <li class="border-b-[3px] border-cream p-5 md:border-b-0 md:border-r-[3px]">
+            <p class="font-type text-sm font-bold uppercase text-gold">2025</p>
+            <p class="cond mt-3 text-2xl font-black uppercase leading-[.95]">Artigo no Y20 (G20)</p>
+            <p class="mt-2 font-type text-sm text-[#B9BFCC]">IA, NLP e dados abertos legislativos</p>
+          </li>
+          <li class="border-b-[3px] border-cream p-5 md:border-b-0 md:border-r-[3px]">
+            <p class="font-type text-sm font-bold uppercase text-gold">2024</p>
+            <p class="cond mt-3 text-2xl font-black uppercase leading-[.95]">BRB · Pesquisa regulatória</p>
+            <p class="mt-2 font-type text-sm text-[#B9BFCC]">Dados financeiros · ecossistema digital e 6G</p>
+          </li>
+          <li class="border-b-[3px] border-cream p-5 md:border-b-0 md:border-r-[3px]">
+            <p class="font-type text-sm font-bold uppercase text-gold">2023 — 2024</p>
+            <p class="cond mt-3 text-2xl font-black uppercase leading-[.95]">Extensão e Comunicação em Rede</p>
+            <p class="mt-2 font-type text-sm text-[#B9BFCC]">Universidade integrada à sociedade</p>
+          </li>
+          <li class="p-5">
+            <p class="font-type text-sm font-bold uppercase text-gold">2021 — 2023</p>
+            <p class="cond mt-3 text-2xl font-black uppercase leading-[.95]">Monitorias, PIBEX e SODEBRAS</p>
+            <p class="mt-2 font-type text-sm text-[#B9BFCC]">Ensino de Estatística no Paranoá (DF)</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= STACK ================= -->
+    <section id="stack" class="border-y-[3px] border-cream bg-umber">
+      <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
+        <div class="reveal mb-4 flex items-center gap-4">
+          <span class="dots" style="--d:22px" aria-hidden="true"><i class="bg-ink"></i><i class="bg-[#463A2E]"></i><i class="bg-brass"></i><i class="bg-bone"></i><i class="bg-ash"></i></span>
+          <p class="font-type text-sm uppercase text-sage">04 / stack tecnológica</p>
+        </div>
+        <h2 class="reveal cond mb-14 text-[clamp(3rem,9vw,6rem)] font-black uppercase leading-[.85]">Ferra<span class="outline-text">mentas</span></h2>
+        <div id="stackGrid" class="reveal grid grid-cols-2 border-l-[3px] border-t-[3px] border-cream sm:grid-cols-3"></div>
+        <p class="reveal mt-8 max-w-3xl font-type text-sm leading-relaxed text-sage">
+          Certificações — DataCamp: Data Science, Machine Learning, Data Visualization, AI Ethics, Cloud Computing, R for Finance, dplyr, Git. DIO: Python para Ciência de Dados, Pandas, Redes Neurais, Visão Computacional.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= CONTATO ================= -->
+    <section id="contato" class="bg-gold text-ink">
+      <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
+        <div class="reveal mb-6 flex items-center gap-4">
+          <span class="dots" style="--d:22px" aria-hidden="true"><i class="bg-ink"></i><i class="bg-cacao"></i><i class="bg-rust"></i><i class="bg-copper"></i><i class="bg-cream"></i></span>
+          <p class="font-type text-sm font-bold uppercase">05 / contato</p>
+        </div>
+        <h2 class="reveal cond text-[clamp(3rem,10vw,7rem)] font-black uppercase leading-[.84]">Vamos contar<br />a próxima história?</h2>
+        <p class="reveal mt-6 max-w-xl font-type text-lg">Aberto a oportunidades em Ciência de Dados, Machine Learning, Modelagem Estatística e IA aplicada.</p>
+
+        <div class="reveal mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <a href="https://wa.me/5561986539720" target="_blank" rel="noopener" class="press shadow-ink flex items-center gap-4 border-[3px] border-ink bg-ink p-5 text-cream">
+            <span class="icon h-9 w-9 shrink-0 text-gold" data-icon="whatsapp"></span>
+            <span><span class="block font-type text-sm uppercase text-sage">WhatsApp</span><span class="block text-xl font-bold">(61) 98653-9720</span></span>
+          </a>
+          <a href="mailto:josefelipe0036@gmail.com" class="press shadow-ink flex items-center gap-4 border-[3px] border-ink bg-cream p-5">
+            <span class="icon h-9 w-9 shrink-0" data-icon="mail"></span>
+            <span class="min-w-0"><span class="block font-type text-sm uppercase text-rust">E-mail</span><span class="block truncate text-xl font-bold">josefelipe0036@gmail.com</span></span>
+          </a>
+          <a href="https://github.com/josefelipe0036" target="_blank" rel="noopener" class="press shadow-ink flex items-center gap-4 border-[3px] border-ink bg-cream p-5">
+            <span class="icon h-9 w-9 shrink-0" data-icon="github"></span>
+            <span><span class="block font-type text-sm uppercase text-rust">GitHub</span><span class="block text-xl font-bold">josefelipe0036</span></span>
+          </a>
+          <a data-linkedin href="#" target="_blank" rel="noopener" class="press shadow-ink flex items-center gap-4 border-[3px] border-ink bg-cream p-5">
+            <span class="icon h-9 w-9 shrink-0" data-icon="linkedin"></span>
+            <span class="min-w-0"><span class="block font-type text-sm uppercase text-rust">LinkedIn</span><span class="block text-xl font-bold leading-tight">José Felipe Custódia de Azevedo</span></span>
+          </a>
+          <a href="assets/curriculo-jose-felipe-azevedo.pdf" download class="press shadow-ink flex items-center gap-4 border-[3px] border-ink bg-copper p-5 sm:col-span-2 lg:col-span-2">
+            <span class="icon h-9 w-9 shrink-0" data-icon="download"></span>
+            <span><span class="block font-type text-sm uppercase">Currículo · PDF</span><span class="cond block text-3xl font-black uppercase leading-none">Baixar currículo</span></span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t-[3px] border-cream bg-ink">
+    <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 font-type text-sm text-sage sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <p>© <span id="ano">2026</span> José Felipe Custódia de Azevedo</p>
+      <span class="dots" style="--d:16px" aria-hidden="true"><i class="bg-cacao"></i><i class="bg-rust"></i><i class="bg-copper"></i><i class="bg-gold"></i><i class="bg-cream"></i></span>
+      <p>Estatística · Ciência de Dados · IA</p>
+    </div>
+  </footer>
+
+  <!-- ================= LINKS FLUTUANTES ================= -->
+  <nav class="fixed bottom-6 left-6 z-30 hidden flex-col border-[3px] border-cream bg-ink lg:flex" aria-label="Redes">
+    <a href="https://github.com/josefelipe0036" target="_blank" rel="noopener" aria-label="GitHub" class="flex h-11 w-11 items-center justify-center border-b-[3px] border-cream hover:bg-gold hover:text-ink"><span class="icon h-5 w-5" data-icon="github"></span></a>
+    <a data-linkedin href="#" target="_blank" rel="noopener" aria-label="LinkedIn" class="flex h-11 w-11 items-center justify-center border-b-[3px] border-cream hover:bg-gold hover:text-ink"><span class="icon h-5 w-5" data-icon="linkedin"></span></a>
+    <a href="mailto:josefelipe0036@gmail.com" aria-label="E-mail" class="flex h-11 w-11 items-center justify-center border-b-[3px] border-cream hover:bg-gold hover:text-ink"><span class="icon h-5 w-5" data-icon="mail"></span></a>
+    <a href="assets/curriculo-jose-felipe-azevedo.pdf" download aria-label="Baixar currículo em PDF" class="flex h-11 w-11 items-center justify-center hover:bg-gold hover:text-ink"><span class="icon h-5 w-5" data-icon="download"></span></a>
+  </nav>
+
+  <a href="https://wa.me/5561986539720?text=Ol%C3%A1%2C%20Jos%C3%A9!%20Vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar." target="_blank" rel="noopener"
+     aria-label="Falar no WhatsApp"
+     class="press fixed bottom-5 right-5 z-30 flex h-14 items-center gap-2 border-[3px] border-ink bg-copper px-4 font-type text-sm font-bold uppercase text-ink shadow-[6px_6px_0_#EEE0B4] sm:bottom-6 sm:right-6">
+    <span class="icon h-6 w-6" data-icon="whatsapp"></span>
+    <span class="hidden sm:inline">WhatsApp</span>
+  </a>
+
+  <script>
+    // ---- Configuração -------------------------------------------------------
+    // Troque pela URL do seu perfil (ex.: https://www.linkedin.com/in/seu-usuario/)
+    const LINKEDIN_URL = 'https://www.linkedin.com/search/results/people/?keywords=Jos%C3%A9%20Felipe%20Cust%C3%B3dia%20de%20Azevedo';
+
+    const STACK = [
+      ['Python',     'Linguagem principal', 'pandas, ML, visão computacional e finanças computacionais'],
+      ['R',          'Estatística',         'Inferência, experimentos, clusterização e Shiny'],
+      ['PyTorch',    'Deep Learning',       'Redes neurais artificiais'],
+      ['TensorFlow', 'Deep Learning',       'Treino e avaliação de modelos'],
+      ['Keras',      'Deep Learning',       'Prototipagem de redes neurais'],
+      ['Spark',      'Dados massivos',      'Computação estatística em larga escala'],
+      ['Tidyverse',  'R · dados',           'dplyr, ggplot2 e mlr'],
+      ['SQL',        'Bancos de dados',     'Consulta e organização de bases'],
+      ['Git',        'Versionamento',       'Código e projetos no GitHub'],
+    ];
+
+    const MARQUEE = ['Estatística', 'Ciência de Dados', 'Machine Learning', 'Deep Learning', 'Inteligência Artificial', 'Dados massivos', 'Dados → histórias'];
+
+    // ---- Ícones (traço, 24×24) ----------------------------------------------
+    const ICONS = {
+      whatsapp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 20.5l1.3-4.1A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 8.6c0 3.2 2.9 6.1 6.2 6.2l1-1.4-1.9-1-1 .8a4.5 4.5 0 0 1-2.4-2.4l.8-1-1-1.9z" fill="currentColor" stroke-width="1"/></svg>',
+      mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><rect width="20" height="16" x="2" y="4"/><path d="m22 7-10 6L2 7"/></svg>',
+      github: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>',
+      linkedin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>',
+      download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><path d="M21 15v6H3v-6"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>',
+      arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>',
+      menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+      close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+    };
+
+    document.documentElement.classList.add('js');
+
+    function paintIcons(root = document) {
+      root.querySelectorAll('[data-icon]').forEach(el => {
+        el.innerHTML = ICONS[el.dataset.icon] || '';
+        el.setAttribute('aria-hidden', 'true');
+      });
+    }
+
+    // Faixa corrida
+    const marqueeHTML = MARQUEE.map(t => `<span>${t}</span><span class="inline-block h-3 w-3 rounded-full bg-ink"></span>`).join('');
+    document.getElementById('marqueeTrack').innerHTML = marqueeHTML;
+    document.getElementById('marqueeTrack2').innerHTML = marqueeHTML;
+
+    // Stack
+    document.getElementById('stackGrid').innerHTML = STACK.map(([name, tag, desc], i) => `
+      <div class="group border-b-[3px] border-r-[3px] border-cream p-5 transition-colors hover:bg-gold hover:text-ink sm:p-6">
+        <div class="flex items-start justify-between font-type text-xs uppercase text-sage group-hover:text-ink">
+          <span>${tag}</span><span>${String(i + 1).padStart(2, '0')}</span>
+        </div>
+        <p class="cond mt-8 text-4xl font-black uppercase leading-none sm:text-5xl">${name}</p>
+        <p class="mt-2 font-type text-sm text-bone/80 group-hover:text-ink">${desc}</p>
+      </div>`).join('');
+
+    paintIcons();
+    document.querySelectorAll('[data-linkedin]').forEach(a => a.href = LINKEDIN_URL);
+    document.getElementById('ano').textContent = new Date().getFullYear();
+
+    // Menu mobile
+    const btn = document.getElementById('menuBtn');
+    const menu = document.getElementById('menuMobile');
+    function setMenu(open) {
+      menu.classList.toggle('hidden', !open);
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+      btn.querySelector('[data-icon]').dataset.icon = open ? 'close' : 'menu';
+      paintIcons(btn);
+    }
+    btn.addEventListener('click', () => setMenu(menu.classList.contains('hidden')));
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+    // Reveal ao rolar
+    const io = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.1 }) : null;
+    document.querySelectorAll('.reveal').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+
+    // Gráfico do hero: dados simulados + ajuste por mínimos quadrados
+    (function drawStory() {
+      const svg = document.getElementById('story');
+      const W = 400, H = 300, P = 28, N = 48;
+      let s = 20020329; // semente fixa → mesmo gráfico sempre
+      const rnd = () => (s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296;
+      const gauss = () => Math.sqrt(-2 * Math.log(rnd() + 1e-9)) * Math.cos(2 * Math.PI * rnd());
+
+      const xs = [], ys = [];
+      for (let i = 0; i < N; i++) { const x = rnd() * 10; xs.push(x); ys.push(1.2 + 0.72 * x + gauss() * 1.1); }
+
+      const mean = a => a.reduce((p, c) => p + c, 0) / a.length;
+      const mx = mean(xs), my = mean(ys);
+      let sxy = 0, sxx = 0, sst = 0, sse = 0;
+      xs.forEach((x, i) => { sxy += (x - mx) * (ys[i] - my); sxx += (x - mx) ** 2; });
+      const b1 = sxy / sxx, b0 = my - b1 * mx;
+      ys.forEach((y, i) => { sst += (y - my) ** 2; sse += (y - (b0 + b1 * xs[i])) ** 2; });
+      const sigma = Math.sqrt(sse / (N - 2));
+
+      const yMin = -1, yMax = 11;
+      const X = x => P + (x / 10) * (W - 2 * P);
+      const Y = y => H - P - ((y - yMin) / (yMax - yMin)) * (H - 2 * P);
+
+      let axes = '';
+      for (let g = 0; g <= 10; g += 2) axes += `<line x1="${X(g)}" y1="${P}" x2="${X(g)}" y2="${H - P}"/>`;
+      for (let g = 0; g <= 10; g += 2) axes += `<line x1="${P}" y1="${Y(g)}" x2="${W - P}" y2="${Y(g)}"/>`;
+      axes += `<line x1="${P}" y1="${H - P}" x2="${W - P}" y2="${H - P}" stroke="#A8A68C" stroke-width="2"/>`;
+      axes += `<line x1="${P}" y1="${P}" x2="${P}" y2="${H - P}" stroke="#A8A68C" stroke-width="2"/>`;
+      document.getElementById('axes').innerHTML = axes;
+
+      // faixa de confiança de 95% para a média
+      const up = [], lo = [];
+      for (let x = 0; x <= 10.001; x += 0.5) {
+        const se = sigma * Math.sqrt(1 / N + (x - mx) ** 2 / sxx) * 2.01;
+        const yh = b0 + b1 * x;
+        up.push(`${X(x)},${Y(yh + se)}`); lo.unshift(`${X(x)},${Y(yh - se)}`);
+      }
+      document.getElementById('band').setAttribute('d', `M${up.join('L')}L${lo.join('L')}Z`);
+
+      const tones = ['#5A3519', '#8E5527', '#C98A55', '#DDB867', '#EEE0B4'];
+      document.getElementById('pts').innerHTML = xs.map((x, i) => {
+        const tone = tones[Math.max(1, Math.min(4, Math.floor(ys[i] / 2.2)))];
+        return `<circle class="pt" cx="${X(x)}" cy="${Y(ys[i])}" r="5" fill="${tone}" stroke="#0D0C0A" stroke-width="1.5" style="transition-delay:${(i * 0.018).toFixed(3)}s"/>`;
+      }).join('');
+
+      const fit = document.getElementById('fit');
+      fit.setAttribute('x1', X(0)); fit.setAttribute('y1', Y(b0));
+      fit.setAttribute('x2', X(10)); fit.setAttribute('y2', Y(b0 + b1 * 10));
+
+      document.getElementById('r2').textContent = (1 - sse / sst).toFixed(2);
+      document.getElementById('nPts').textContent = N;
+      requestAnimationFrame(() => requestAnimationFrame(() => svg.classList.add('on')));
+    })();
+  </script>
+</body>
+</html>
